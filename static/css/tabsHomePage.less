@@ -1,0 +1,52 @@
+.tabs-home-page {
+	.top-operate {
+		.el-button {
+			position: relative;
+			.el-select.table-header-select {
+				border: none;
+				position: absolute;
+				left: 0;
+				top: 0;
+				opacity: 0;
+				height: 100%!important;
+				width: 100%!important;
+				overflow: hidden;
+				// z-index: -1;
+				.el-select__tags {
+					display: none!important;
+				}
+
+			}
+		}
+	}
+
+	.el-form {
+		transition: all 0.3s linear;
+		.more-btn {
+			text-align: center;
+			i {
+				position: relative;
+				color: #ccc;
+				font-size: 20px;
+				animation: upAndDown 1.5s infinite linear alternate;
+				transition: all 0.15s linear;
+
+				cursor: pointer;
+				&.is-reverse {
+					transform: rotate(-180deg);
+				}
+				&:hover {
+					color: #333;
+				}
+			}
+		}
+	}
+}
+@keyframes upAndDown {
+    from {
+        top: -10px;
+    }
+    to {
+        top: 0px;
+    }
+}

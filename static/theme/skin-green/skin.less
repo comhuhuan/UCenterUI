@@ -1,0 +1,145 @@
+@import url(elmGreen.less);
+
+/*
+ * Skin: green
+ * ----------
+ */
+
+@greenPrimary: #1a9858;
+@greenActive: #217b2b;
+@greenHover: #60bf8f;
+@greenAside: #5eb769;
+@greenLine: #10482c;
+
+.skin-green {
+    .green;
+    .el-header {
+        background-color: @greenPrimary;
+
+        .brand {
+            a:hover {
+                background-color: @greenHover;
+            }
+        }
+    }
+    .el-aside {
+        background-color: @greenAside;
+    } //设置标题颜色
+    
+    .el-menu {
+        background-color: @greenPrimary;
+        .el-menu-item {
+            background-color: @greenPrimary;
+            &:hover {
+                background-color: @greenHover;
+            }
+        }
+        .is-active {
+            background-color: @greenActive;
+            &:hover {
+                background-color: @greenActive;
+            }
+        }
+        .el-submenu.is-active.is-opened {
+            background-color: @greenActive;
+            &:hover {
+                background-color: @greenActive;
+            }
+            .el-submenu__title {
+                &:hover {
+                    background-color: @greenHover;
+                }
+            }
+        }
+        .el-submenu {
+            .el-submenu__title {
+                &:hover {
+                    background-color: @greenHover;
+                }
+            }
+        }
+    }
+    .menu-border {
+        border-bottom: 1px solid @greenLine;
+    }
+    .el-dropdown:hover {
+        background-color: @greenHover;
+    }
+    .el-menu--horizontal {
+        background-color: @greenPrimary;
+        .el-menu-item {
+            background-color: @greenPrimary;
+            &:hover {
+                background-color: @greenHover;
+            }
+        }
+        .el-menu-item.is-active {
+            background-color: @greenActive;
+            &:hover {
+                background-color: @greenHover;
+            }
+        }
+        .el-submenu {
+            .el-menu {
+                .el-menu-item {
+                    background-color: @greenPrimary;
+                    &:hover {
+                        background-color: @greenHover;
+                    }
+                }
+                .el-menu-item.is-active {
+                    background-color: @greenActive;
+                }
+            }
+            .el-submenu__title {
+                &:hover {
+                    background-color: @greenHover;
+                }
+                .is-active {
+                    background-color: @greenActive;
+                }
+            }
+            &:hover {
+                background-color: @greenHover;
+            }
+        }
+    } //收缩的样式
+    .menu-collapse, .menu-popover  {
+        background-color: @greenPrimary;
+        border-color: @greenPrimary;
+        ul {
+            li {
+                &.is-active {
+                    background-color: @greenActive!important;
+                    a:hover{
+                        background-color: @greenActive;
+                    }
+                }
+                a {
+                    &:hover {
+                        background-color: @greenHover;
+                    }
+                }
+            }
+        }
+    }
+    .menu-popover {
+        &.el-popper .popper__arrow,
+        &.el-popper .popper__arrow::after {
+            border-right-color: @greenPrimary;
+        }
+    }
+
+    .el-dropdown-menu {
+        background-color: @greenPrimary;
+        .el-dropdown-menu__item {
+            &:hover {
+                background-color: @greenHover;
+            }
+        }
+
+        .popper__arrow, .popper__arrow::after {
+            border-bottom-color: @greenPrimary!important;
+        }
+    }
+}

@@ -1,0 +1,145 @@
+@import url(elmBlack.less);
+
+/*
+ * Skin: black
+ * ----------
+ */
+
+@blackPrimary: #2c3035;
+@blackActive: #268b95;
+@blackHover: #5a6168;
+@blackAside: #373d42;
+@blackLine: #000;
+
+.skin-black {
+    .black;
+    .el-header {
+        background-color: @blackPrimary;
+
+        .brand {
+            a:hover {
+                background-color: @blackHover;
+            }
+        }
+    }
+    .el-aside {
+        background-color: @blackAside;
+    } //设置标题颜色
+    
+    .el-menu {
+        background-color: @blackPrimary;
+        .el-menu-item {
+            background-color: @blackPrimary;
+            &:hover {
+                background-color: @blackHover;
+            }
+        }
+        .is-active {
+            background-color: @blackActive;
+            &:hover {
+                background-color: @blackActive;
+            }
+        }
+        .el-submenu.is-active.is-opened {
+            background-color: @blackActive;
+            &:hover {
+                background-color: @blackActive;
+            }
+            .el-submenu__title {
+                &:hover {
+                    background-color: @blackHover;
+                }
+            }
+        }
+        .el-submenu {
+            .el-submenu__title {
+                &:hover {
+                    background-color: @blackHover;
+                }
+            }
+        }
+    }
+    .menu-border {
+        border-bottom: 1px solid @blackLine;
+    }
+    .el-dropdown:hover {
+        background-color: @blackHover;
+    }
+    .el-menu--horizontal {
+        background-color: @blackPrimary;
+        .el-menu-item {
+            background-color: @blackPrimary;
+            &:hover {
+                background-color: @blackHover;
+            }
+        }
+        .el-menu-item.is-active {
+            background-color: @blackActive;
+            &:hover {
+                background-color: @blackHover;
+            }
+        }
+        .el-submenu {
+            .el-menu {
+                .el-menu-item {
+                    background-color: @blackPrimary;
+                    &:hover {
+                        background-color: @blackHover;
+                    }
+                }
+                .el-menu-item.is-active {
+                    background-color: @blackActive;
+                }
+            }
+            .el-submenu__title {
+                &:hover {
+                    background-color: @blackHover;
+                }
+                .is-active {
+                    background-color: @blackActive;
+                }
+            }
+            &:hover {
+                background-color: @blackHover;
+            }
+        }
+    } //收缩的样式
+    .menu-collapse, .menu-popover  {
+        background-color: @blackPrimary;
+        border-color: @blackPrimary;
+        ul {
+            li {
+                &.is-active {
+                    background-color: @blackActive!important;
+                    a:hover{
+                        background-color: @blackActive;
+                    }
+                }
+                a {
+                    &:hover {
+                        background-color: @blackHover;
+                    }
+                }
+            }
+        }
+    }
+    .menu-popover {
+        &.el-popper .popper__arrow,
+        &.el-popper .popper__arrow::after {
+            border-right-color: @blackPrimary;
+        }
+    }
+
+    .el-dropdown-menu {
+        background-color: @blackPrimary;
+        .el-dropdown-menu__item {
+            &:hover {
+                background-color: @blackHover;
+            }
+        }
+
+        .popper__arrow, .popper__arrow::after {
+            border-bottom-color: @blackPrimary!important;
+        }
+    }
+}

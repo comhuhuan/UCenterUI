@@ -1,0 +1,203 @@
+<template>
+	<el-tabs type="border-card" tab-position="bottom" :activeName="activeName" >
+		<el-tab-pane label="当前页" :closable="false" name="当前页">
+				<el-form label-width="auto" inline :model="fromFilters" :rules="fromRules" ref="fromFilters">
+				<el-form-item label="机房名称：" prop="serviceCodeQuery">
+					<el-select size="mini" v-model="fromFilters.serviceCodeQuery" placeholder="请选择机房名称">
+					    <el-option
+					      v-for="item in serviceCodeList"
+					      :key="item.value"
+					      :label="item.label"
+					      :value="item.value">
+					    </el-option>
+					</el-select>
+				</el-form-item>
+				<el-form-item label="起始时间：" prop="startTimeQuery">
+					<el-date-picker
+				      v-model="fromFilters.startTimeQuery"
+				      size="mini"
+				      type="date"
+				      placeholder="选择日期">
+				    </el-date-picker>
+				</el-form-item>	
+				<el-form-item label="终止时间：" prop="endTimeQuery">
+					<el-date-picker
+				      v-model="fromFilters.endTimeQuery"
+				      size="mini"
+				      type="date"
+				      placeholder="选择日期">
+				    </el-date-picker>
+				</el-form-item>	
+					<el-form-item label="执行状态：" prop="excStateQuery">
+					<el-select size="mini" v-model="fromFilters.excStateQuery" placeholder="请选择执行状态">
+					    <el-option
+					      v-for="item in excStateList"
+					      :key="item.value"
+					      :label="item.label"
+					      :value="item.value">
+					    </el-option>
+					</el-select>
+				</el-form-item>
+				<el-form-item>		
+					<el-button type="primary" @click="searchEvt">搜索</el-button>
+					<el-button type="default" @click="czEvt">重置</el-button>
+				</el-form-item>
+			</el-form>
+			
+			<div class="parting-line"></div>
+			<el-pagination style="float: right; margin-top: 10px;" @size-change="handleSizeChange" :current-page.sync="fromFilters.pageIndex" :page-sizes="[10, 15, 50, 100]" :page-size="fromFilters.pageSize" layout="total, sizes" :total="total">
+            </el-pagination>
+			<el-table :data="tableList" border :loading="isLoading">
+			    <el-table-column label="经营者名称" prop="idcName"></el-table-column>
+			    <el-table-column label="日志查询指令ID" prop="commandID"></el-table-column>
+			    <el-table-column label="机房名称" prop="serviceCode"></el-table-column>
+			    <el-table-column label="起始时间" prop="startTime"></el-table-column>
+			    <el-table-column label="终止时间" prop="endTime"></el-table-column>
+			    <el-table-column label="IP/端口" prop="srcIP"></el-table-column>
+			    <el-table-column label="URL/地址" prop="url"></el-table-column>
+			    <el-table-column label="生成时间" prop="timeStamp"></el-table-column>
+			    <el-table-column label="执行状态" prop="excState">
+			    	<template slot-scope="scope">
+                        <!--执行状态 1-等待处理，2-正在处理，3-处理成功，4-处理失败，5-部分成功-->
+                        <el-tag size="mini"type="info" v-if="scope.row.excState === 1">等待处理</el-tag>
+                        <el-tag size="mini" type="blue" v-if="scope.row.excState === 2">正在处理</el-tag>
+                        <el-tag size="mini" type="success"  v-if="scope.row.excState === 3">处理成功</el-tag>
+                        <el-tag size="mini" type="danger"  v-if="scope.row.excState === 4">处理失败</el-tag>
+                        <el-tag size="mini" type="danger"  v-if="scope.row.excState === 5">部分成功</el-tag>
+                    </template>
+			    </el-table-column>
+			    <el-table-column label="执行时间" prop="excTime"></el-table-column>
+			</el-table>
+			<el-pagination style="float: right; margin-top: 10px;" @current-change="handleCurrentChange" :current-page.sync="fromFilters.pageIndex" :page-size="fromFilters.pageSize" layout="prev, pager, next, jumper" :total="total">
+            </el-pagination>
+		</el-tab-pane>
+		<el-tab-pane v-for="tab in tabs_list" :key="tab.name" :name="tab.name" closable :label="tab.name">
+			<keep-alive>
+				<component :is="tab.component"></component>
+			</keep-alive>
+		</el-tab-pane>
+	</el-tabs>
+</template>
+
+<script>
+	import { getVisitLogSearchDirList,getServiceCode } from 'api/wbj/visitLogSearchDir'
+	
+	export default {
+		name: 'VisitLogSearchDir',
+		data() {
+			return {
+				fromFilters: this.fromFiltersInit(),
+				fromRules: {
+					
+				},
+				serviceCodeList:[],
+				excStateList: [
+					{value: '0', label: '全部'},
+					{value: '1', label: '等待处理'},
+					{value: '2', label: '正在处理'},
+					{value: '3', label: '处理成功'},
+					{value: '4', label: '处理失败'},
+					{value: '5', label: '部分成功'}
+				],
+				tableList: [],
+				total:0,
+				totalPageCount:0,
+				isLoading: false,
+				tabs_list: [],
+				activeName: '当前页'
+			}
+		},
+		created() {
+			this.getList()
+			this.selectEvt()
+		},
+		methods: {
+		//查询
+        searchEvt() {
+            this.getList()
+        },
+        //重置
+        fromFiltersInit() {
+            return {
+					serviceCodeQuery: '',
+					startTimeQuery: '',
+					endTimeQuery: '',
+					excStateQuery: '',
+					pageIndex:1,
+					pageSize:10
+            }
+        },
+		   handleSizeChange(val) {
+                this.fromFilters.pageSize = val
+                this.fromFilters.pageIndex = 1
+                this.getList()
+            },
+            handleCurrentChange(val) {
+                this.fromFilters.pageIndex = val
+                this.getList()
+            },
+            czEvt() {
+              this.fromFilters = this.fromFiltersInit()
+            },
+        //下拉框
+        selectEvt(){
+        	getServiceCode().then(res => {
+                if (res.status === 'success') {
+                    this.serviceCodeList = res.message.serviceCodeList
+                } else {
+                    this.$message({
+                        type: 'error',
+                        message: res.message,
+                        showClose: true,
+                    })
+                }
+            }).catch(err => {
+                this.$message({
+                    type: 'error',
+                    message: '请求不成功',
+                    showClose: true,
+                })
+            })
+        }, 
+			getList() {
+				this.isLoading = true
+				getVisitLogSearchDirList(this.fromFilters).then( res => {
+					if(res.status === 'success') {
+						this.tableList = res.message.rows
+						this.total=res.message.total
+						this.totalPageCount=res.message.totalPageCount
+					} else {
+						this.$message({
+							type: 'error',
+							message: res.message,
+							showClose: true,
+						})
+					}
+					this.isLoading = false
+				}).catch( err => {
+					this.$message({
+						type: 'error',
+						message: '请求不成功',
+						showClose: true,
+					})
+					this.isLoading = false
+				})
+			},
+			
+		}
+	}
+
+</script>
+
+<style lang="less" scoped>
+	.el-select, .el-input {
+		width: 165px;
+	}
+	.el-tabs {
+		height: calc(~'100% - 2px');
+
+		.el-tabs__content {
+			padding: 0;
+		}
+	}
+</style>
